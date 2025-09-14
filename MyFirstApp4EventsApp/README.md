@@ -255,4 +255,491 @@ Here’s a **well-structured table** you can keep handy.
 ---
 1) ![alt text](image.png)
 
+## -------- Basic state --------
+1) ![alt text](image-1.png)
+# -- notes of state and props in react native -----
+Got it 👍 Let me give you **well-structured notes on `State` and `Props` in React Native** so you can keep them as reference while coding.
 
+---
+
+# 📒 Notes on **State & Props** in React Native
+
+## 🔹 1. What are Props?
+
+* **Definition**:
+  `props` (short for **properties**) are read-only inputs passed **from parent component to child component**.
+  They allow you to customize and reuse components.
+
+* **Key points**:
+
+  * Passed as attributes to components.
+  * Immutable → cannot be modified by the child component.
+  * Used for configuration and data flow **from parent → child**.
+  * Similar to function parameters.
+
+* **Example**:
+
+  ```tsx
+  import React from "react";
+  import { Text } from "react-native";
+
+  type GreetingProps = {
+    name: string;
+  };
+
+  const Greeting = ({ name }: GreetingProps) => {
+    return <Text>Hello, {name}! 👋</Text>;
+  };
+
+  export default Greeting;
+  ```
+
+  **Usage**:
+
+  ```tsx
+  <Greeting name="Ritik" />
+  <Greeting name="Sharma" />
+  ```
+
+---
+
+## 🔹 2. What is State?
+
+* **Definition**:
+  `state` is a built-in object that stores **mutable data** inside a component.
+  When state changes → the component **re-renders** automatically.
+
+* **Key points**:
+
+  * Managed within the component itself.
+  * Can be changed using `setState` (class components) or `useState` (functional components).
+  * Local to the component (unless shared via context or props).
+  * Ideal for user input, UI changes, toggles, counters, etc.
+
+* **Example (using `useState`)**:
+
+  ```tsx
+  import React, { useState } from "react";
+  import { View, Button, Text } from "react-native";
+
+  const CounterApp = () => {
+    const [count, setCount] = useState(0);
+
+    return (
+      <View>
+        <Text>Count: {count}</Text>
+        <Button title="Increase" onPress={() => setCount(count + 1)} />
+        <Button title="Decrease" onPress={() => setCount(count - 1)} />
+      </View>
+    );
+  };
+
+  export default CounterApp;
+  ```
+
+---
+
+## 🔹 3. Differences Between Props & State
+
+| Feature          | Props                                | State                                   |
+| ---------------- | ------------------------------------ | --------------------------------------- |
+| Definition       | Data passed **to** a component       | Data managed **inside** a component     |
+| Mutability       | **Immutable** (cannot change inside) | **Mutable** (can be updated)            |
+| Who controls it? | Parent component                     | The component itself                    |
+| Usage            | Configuring/reusing components       | Handling dynamic data/UI updates        |
+| Example          | `<Greeting name="Ritik" />`          | `const [count, setCount] = useState(0)` |
+
+---
+
+## 🔹 4. Combining Props & State
+
+Often you’ll use both together:
+
+* **Props** → to get initial data from parent.
+* **State** → to allow updates inside the component.
+
+**Example**:
+
+```tsx
+import React, { useState } from "react";
+import { View, Text, Button } from "react-native";
+
+type CounterProps = {
+  initialCount: number;
+};
+
+const Counter = ({ initialCount }: CounterProps) => {
+  const [count, setCount] = useState(initialCount);
+
+  return (
+    <View>
+      <Text>Count: {count}</Text>
+      <Button title="Increase" onPress={() => setCount(count + 1)} />
+    </View>
+  );
+};
+
+export default Counter;
+```
+
+**Usage**:
+
+```tsx
+<Counter initialCount={5} />
+```
+
+---
+
+## 🔹 5. Best Practices
+
+✅ Use **props** for data/config that shouldn’t change in child.
+✅ Use **state** for dynamic data that should update & trigger re-render.
+✅ Keep state as **minimal** as possible (avoid duplication).
+✅ If multiple components need the same state → lift it up to a parent or use **Context API**.
+
+---
+
+👉 Do you want me to also create a **cheat sheet table for React Native State Hooks (`useState`, `useEffect`, `useReducer`)** just like we did for events?
+
+- yes:
+
+
+
+## ------- difference between state and varaible --------
+
+Perfect 🚀 Here’s a **React Native State Management Cheat Sheet (with Hooks)** — a quick reference for `useState`, `useEffect`, `useReducer` and how they’re used with props + events.
+
+---
+
+# 📒 **React Native State Management Cheat Sheet**
+
+## 🔹 1. `useState` (Basic State Hook)
+
+* **Purpose**: Manage local state in functional components.
+* **Syntax**:
+
+  ```tsx
+  const [state, setState] = useState(initialValue);
+  ```
+* **Example**:
+
+  ```tsx
+  const [count, setCount] = useState(0);
+
+  <Button title="+" onPress={() => setCount(count + 1)} />
+  <Text>{count}</Text>
+  ```
+
+---
+
+## 🔹 2. `useEffect` (Side Effects)
+
+* **Purpose**: Run side effects (API calls, subscriptions, timers).
+* **Syntax**:
+
+  ```tsx
+  useEffect(() => {
+    // effect code here
+    return () => {
+      // cleanup (optional)
+    };
+  }, [dependencies]);
+  ```
+* **Example**:
+
+  ```tsx
+  const [time, setTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(timer); // cleanup
+  }, []);
+
+  <Text>{time.toLocaleTimeString()}</Text>
+  ```
+
+---
+
+## 🔹 3. `useReducer` (Complex State)
+
+* **Purpose**: Manage more complex state logic with multiple transitions.
+* **Syntax**:
+
+  ```tsx
+  const [state, dispatch] = useReducer(reducer, initialState);
+  ```
+* **Example**:
+
+  ```tsx
+  const reducer = (state: number, action: { type: string }) => {
+    switch (action.type) {
+      case "increment": return state + 1;
+      case "decrement": return state - 1;
+      default: return state;
+    }
+  };
+
+  const [count, dispatch] = useReducer(reducer, 0);
+
+  <Button title="+" onPress={() => dispatch({ type: "increment" })} />
+  <Button title="-" onPress={() => dispatch({ type: "decrement" })} />
+  <Text>{count}</Text>
+  ```
+
+---
+
+## 🔹 4. Props + State Together
+
+* **Props** = external data (read-only).
+* **State** = internal data (can change).
+
+**Example**:
+
+```tsx
+type CounterProps = { initial: number };
+
+const Counter = ({ initial }: CounterProps) => {
+  const [count, setCount] = useState(initial);
+  return (
+    <View>
+      <Text>{count}</Text>
+      <Button title="+" onPress={() => setCount(count + 1)} />
+    </View>
+  );
+};
+
+<Counter initial={5} />
+```
+
+---
+
+## 🔹 5. Cheat Sheet Table (Quick Reference)
+
+| Hook         | Purpose                        | Syntax Example                                   | Common Use Case                  |
+| ------------ | ------------------------------ | ------------------------------------------------ | -------------------------------- |
+| `useState`   | Store simple state             | `const [count, setCount] = useState(0)`          | Counters, toggles, forms         |
+| `useEffect`  | Handle side effects            | `useEffect(()=>{}, [dep])`                       | API calls, timers, subscriptions |
+| `useReducer` | Manage complex/multiple states | `const [state, dispatch] = useReducer(fn, init)` | Auth, forms, reducers            |
+| Props        | Pass data parent → child       | `<Child name="Ritik" />`                         | Component config, UI text        |
+
+---
+
+✅ **Best Practices**
+
+* Use `useState` for simple, local values.
+* Use `useEffect` for async tasks (API, timers).
+* Use `useReducer` when state grows complex (multiple conditions).
+* Combine **props + state** for reusable + dynamic components.
+
+---
+
+👉 Do you want me to also create a **visual diagram (flowchart)** that shows how **props, state, and events** interact in a React Native component lifecycle?
+
+- yes:
+Great choice 🙌 A **visual diagram** makes props, state, and events much clearer.
+Here’s a **flowchart-style explanation** (text + diagram idea) for **React Native data flow**:
+
+---
+
+# 🔄 **React Native: Props, State & Events Flow**
+
+```
+          ┌─────────────────────────┐
+          │   Parent Component      │
+          │   (holds state)         │
+          └──────────┬──────────────┘
+                     │  passes props
+                     ▼
+          ┌─────────────────────────┐
+          │   Child Component       │
+          │   (receives props)      │
+          └──────────┬──────────────┘
+                     │ triggers event (onPress, onChange, etc.)
+                     ▼
+          ┌─────────────────────────┐
+          │   Event Handler         │
+          │   (calls setState)      │
+          └──────────┬──────────────┘
+                     │ updates state
+                     ▼
+          ┌─────────────────────────┐
+          │   React Re-render       │
+          │   (UI updates with new  │
+          │    state & props)       │
+          └─────────────────────────┘
+```
+
+---
+
+## 🔹 Example Code for Diagram Above
+
+```tsx
+import React, { useState } from "react";
+import { View, Text, Button } from "react-native";
+
+const Child = ({ count, onIncrement }: { count: number; onIncrement: () => void }) => {
+  return (
+    <View>
+      <Text style={{ fontSize: 20 }}>Count: {count}</Text>
+      <Button title="Increment" onPress={onIncrement} />
+    </View>
+  );
+};
+
+const App = () => {
+  const [count, setCount] = useState(0);
+
+  // Event handler updates state
+  const handleIncrement = () => setCount(count + 1);
+
+  return (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      {/* Passing state (count) as props + event handler */}
+      <Child count={count} onIncrement={handleIncrement} />
+    </View>
+  );
+};
+
+export default App;
+```
+
+---
+
+## 🔹 Flow Explanation
+
+1. **Parent holds state** → `count` is in `App`.
+2. **Props flow down** → `Child` gets `count` + `onIncrement`.
+3. **Event triggered** → User clicks button in `Child`.
+4. **Handler updates state** → `setCount()` in parent.
+5. **Re-render** → New `count` flows again as props to `Child`.
+
+---
+
+👉 This shows the **one-way data flow** in React Native:
+**State lives at the top → passed as props → child triggers events → parent updates state → UI re-renders.**
+
+---
+
+## -------- difference between state and variable -------
+
+That’s an excellent question 👍 — many beginners confuse **state** and **variables** in React Native. Let’s break it down simply:
+
+---
+
+# ⚡ Difference Between **State** and **Variable** in React Native
+
+| Feature               | **State (`useState`)**                                | **Variable (`let`, `const`)**                |
+| --------------------- | ----------------------------------------------------- | -------------------------------------------- |
+| **Purpose**           | Stores **data that affects UI rendering**             | Stores **temporary values** (not tied to UI) |
+| **Re-render trigger** | ✅ **Changes re-render the component**                 | ❌ **Changes do NOT re-render UI**            |
+| **Persistence**       | Persists across re-renders (until component unmount)  | Resets every time component re-renders       |
+| **Usage**             | For dynamic UI (e.g., counters, form inputs, toggles) | For calculations, constants, helper values   |
+| **Update method**     | Must use **`setState` function**                      | Direct assignment (`=`, `++`, etc.)          |
+| **Example**           | `const [count, setCount] = useState(0)`               | `let temp = 5; temp += 1;`                   |
+
+---
+
+## 🔹 Example: State vs Variable
+
+```tsx
+import React, { useState } from "react";
+import { View, Text, Button } from "react-native";
+
+export default function App() {
+  // State variable
+  const [count, setCount] = useState(0);
+
+  // Normal variable
+  let temp = 0;
+
+  return (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Text style={{ fontSize: 20 }}>State Count: {count}</Text>
+      <Text style={{ fontSize: 20 }}>Temp Variable: {temp}</Text>
+
+      <Button title="Increase State" onPress={() => setCount(count + 1)} />
+      <Button title="Increase Variable" onPress={() => (temp += 1)} />
+    </View>
+  );
+}
+```
+
+---
+
+### 🟢 What happens when you click buttons:
+
+* **Increase State** → UI updates because React re-renders when `setCount` is called.
+* **Increase Variable** → UI does **not** update (temp resets to `0` on next render).
+
+---
+
+✅ Rule of Thumb:
+
+* Use **state** when UI should **react to changes**.
+* Use **variables** for temporary logic inside the function.
+
+---
+
+Do you want me to also make a **visual diagram (flow)** showing how **state re-renders but variables don’t**?
+
+- yes:
+Perfect 🚀 Let’s make it crystal clear with a **visual diagram** showing how **state** vs **variable** works in React Native.
+
+---
+
+# 🔹 State vs Variable Flow in React Native
+
+## 🟢 State (`useState`)
+
+```
+Component Render → State Value Stored (by React)
+
+   Button Click → setState(newValue)
+                 ↓
+         React Updates State
+                 ↓
+        🔄 Component Re-renders
+                 ↓
+       ✅ UI shows updated value
+```
+
+✅ State **persists across renders** and triggers **UI updates**.
+
+---
+
+## 🔵 Variable (`let`, `const`)
+
+```
+Component Render → Variable Value Created (temporary)
+
+   Button Click → variable = variable + 1
+                 ↓
+         ❌ No re-render triggered
+                 ↓
+        UI still shows old value
+```
+
+❌ Variable **resets** when component re-renders, and **UI does not update**.
+
+---
+
+## 📊 Side-by-Side Example:
+
+| Action                 | State (`count`) | Variable (`temp`) |
+| ---------------------- | --------------- | ----------------- |
+| Initial Render         | 0               | 0                 |
+| Click "Increase State" | 1 (UI updates)  | 0                 |
+| Click "Increase Var"   | 1 (internal)    | Still 0 on screen |
+| Next Render Occurs     | Keeps 1         | Resets to 0       |
+
+---
+
+👉 That’s why we **must use state** whenever we want React Native to **re-render the UI**.
+Variables are just like "scratchpads" for temporary logic, while **state is memory that React keeps between renders**.
+
+---
+# ------- output ------
+1) ![alt text](image-2.png)
+
+
+## ---------- props ------------

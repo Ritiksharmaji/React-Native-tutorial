@@ -47,6 +47,7 @@
 
 import React from "react";
 import { View, Text, Button } from "react-native";
+import Student from "./component/student";
 
 const App = () => {
   const fruit = (name?: string) => {
@@ -58,17 +59,19 @@ const App = () => {
   };
 
   return (
-    <View>
-      <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-        Button and OnPress Events
-      </Text>
+    // <View>
+    //   <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+    //     Button and OnPress Events
+    //   </Text>
 
-      {/* This will call fruit() with no argument */}
-      <Button title="Click Me" onPress={() => fruit()} color="green" />
+    //   {/* This will call fruit() with no argument */}
+    //   <Button title="Click Me" onPress={() => fruit()} color="green" />
 
-      {/* This will call fruit("Banana") */}
-      <Button title="Banana" onPress={() => fruit("Banana")} color="orange" />
-    </View>
+    //   {/* This will call fruit("Banana") */}
+    //   <Button title="Banana" onPress={() => fruit("Banana")} color="orange" />
+      
+    // </View>
+     <Student />
   );
 };
 
