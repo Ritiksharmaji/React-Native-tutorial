@@ -48,6 +48,7 @@
 import React from "react";
 import { View, Text, Button } from "react-native";
 import Student from "./component/student";
+import Teacher from "./component/Teacher";
 
 const App = () => {
   const fruit = (name?: string) => {
@@ -71,7 +72,8 @@ const App = () => {
     //   <Button title="Banana" onPress={() => fruit("Banana")} color="orange" />
       
     // </View>
-     <Student />
+    //  <Student />
+    <Teacher/>
   );
 };
 
