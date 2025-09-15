@@ -49,6 +49,8 @@ import React from "react";
 import { View, Text, Button } from "react-native";
 import Student from "./component/student";
 import Teacher from "./component/Teacher";
+import UserData from "./component/UserData";
+import BasicForm from "./component/BasicForm";
 
 const App = () => {
   const fruit = (name?: string) => {
@@ -73,7 +75,10 @@ const App = () => {
       
     // </View>
     //  <Student />
-    <Teacher/>
+    // <Teacher/>
+    // <UserData/>
+    <BasicForm/>
+
   );
 };
 

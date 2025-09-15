@@ -988,3 +988,12 @@ const styles = StyleSheet.create({
 ---
 
 Would you like me to also make a **React Native Styling Cheat Sheet PDF (all properties + examples)** so you can keep it as a quick reference while coding?
+- yes: react_native_styling_cheatsheet.pdf
+
+## ---------- React Native tutorial in Hindi #12 Get Text Input Value | Handling Text Input -----
+
+1) ![alt text](image-4.png)
+2) ![alt text](image-5.png)
+3) ![alt text](image-6.png)
+4) ![alt text](image-7.png)
+5) 
