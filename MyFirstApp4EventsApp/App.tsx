@@ -57,6 +57,7 @@ import FruitMapWithOutFlatWithGrid from "./component/FruitMapWithOutFlatWithGrid
 import FruitFlatList from "./component/FruitFlatList";
 import FruitListWithAllRender from "./component/FruitListWithAllRender";
 import Combine from "./component/Grid/Combine";
+import SectionList_1 from "./component/SectionList/SectionList_1";
 
 const App = () => {
   const fruit = (name?: string) => {
@@ -88,7 +89,8 @@ const App = () => {
     // <FruitMapWithOutFlatList/>
     // <FruitMapWithOutFlatWithGrid />
     // <FruitListWithAllRender/>
-    <Combine/>
+    // <Combine/>
+    <SectionList_1 />
 
 
   );
