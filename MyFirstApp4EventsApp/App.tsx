@@ -51,6 +51,11 @@ import Student from "./component/student";
 import Teacher from "./component/Teacher";
 import UserData from "./component/UserData";
 import BasicForm from "./component/BasicForm";
+import StyledFlatList from "./component/FruitFlatList";
+import FruitMapWithOutFlatList from "./component/FruitMapWithOutFlatList";
+import FruitMapWithOutFlatWithGrid from "./component/FruitMapWithOutFlatWithGrid";
+import FruitFlatList from "./component/FruitFlatList";
+import FruitListWithAllRender from "./component/FruitListWithAllRender";
 
 const App = () => {
   const fruit = (name?: string) => {
@@ -77,7 +82,12 @@ const App = () => {
     //  <Student />
     // <Teacher/>
     // <UserData/>
-    <BasicForm/>
+    // <BasicForm/>
+    // <StyledFlatList />
+    // <FruitMapWithOutFlatList/>
+    // <FruitMapWithOutFlatWithGrid />
+    <FruitListWithAllRender/>
+
 
   );
 };
