@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native"
+import { StyleSheet, Text, TouchableHighlight, View } from "react-native"
 
 const App = ()=>{
   return(
@@ -28,6 +28,7 @@ const App = ()=>{
         <View style={styles.box3}></View>
         <View style={styles.box1}></View>
       </View>
+
   )
 }
 
