@@ -1,4 +1,4 @@
-package com.myapp_6_hooks
+package com.MyApp_6_Hook
 
 import android.app.Application
 import com.facebook.react.PackageList

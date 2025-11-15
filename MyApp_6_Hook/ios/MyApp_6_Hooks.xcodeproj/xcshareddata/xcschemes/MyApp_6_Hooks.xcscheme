@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "MyApp_6_Hooks.app"
-               BlueprintName = "MyApp_6_Hooks"
-               ReferencedContainer = "container:MyApp_6_Hooks.xcodeproj">
+               BuildableName = "MyApp_6_Hook.app"
+               BlueprintName = "MyApp_6_Hook"
+               ReferencedContainer = "container:MyApp_6_Hook.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "MyApp_6_HooksTests.xctest"
-               BlueprintName = "MyApp_6_HooksTests"
-               ReferencedContainer = "container:MyApp_6_Hooks.xcodeproj">
+               BuildableName = "MyApp_6_HookTests.xctest"
+               BlueprintName = "MyApp_6_HookTests"
+               ReferencedContainer = "container:MyApp_6_Hook.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "MyApp_6_Hooks.app"
-            BlueprintName = "MyApp_6_Hooks"
-            ReferencedContainer = "container:MyApp_6_Hooks.xcodeproj">
+            BuildableName = "MyApp_6_Hook.app"
+            BlueprintName = "MyApp_6_Hook"
+            ReferencedContainer = "container:MyApp_6_Hook.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "MyApp_6_Hooks.app"
-            BlueprintName = "MyApp_6_Hooks"
-            ReferencedContainer = "container:MyApp_6_Hooks.xcodeproj">
+            BuildableName = "MyApp_6_Hook.app"
+            BlueprintName = "MyApp_6_Hook"
+            ReferencedContainer = "container:MyApp_6_Hook.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

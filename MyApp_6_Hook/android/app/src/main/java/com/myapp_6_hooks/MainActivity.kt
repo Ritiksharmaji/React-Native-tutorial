@@ -1,4 +1,4 @@
-package com.myapp_6_hooks
+package com.MyApp_6_Hook
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
@@ -11,7 +11,7 @@ class MainActivity : ReactActivity() {
    * Returns the name of the main component registered from JavaScript. This is used to schedule
    * rendering of the component.
    */
-  override fun getMainComponentName(): String = "MyApp_6_Hooks"
+  override fun getMainComponentName(): String = "MyApp_6_Hook"
 
   /**
    * Returns the instance of the [ReactActivityDelegate]. We use [DefaultReactActivityDelegate]

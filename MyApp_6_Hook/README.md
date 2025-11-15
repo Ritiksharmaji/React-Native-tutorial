@@ -517,3 +517,128 @@ Useful for:
 ✅ useState + useEffect combined examples
 ✅ useEffect advanced (API, timers, navigation, async)
 Just type **"next"**.
+
+
+## --------------------- React Native tutorial in Hindi #25 Toggle, Show and Hide components -------
+1) ![alt text](image-3.png)
+2) ![alt text](image-4.png)
+
+# ------------ React Native tutorial in Hindi #26 useEffect as ComponentDidUnmount | Life Cycle Method ------
+1) ![alt text](image-5.png)
+2) 
+
+# -- Q. how to know which useEffect is for componentmount and componentDidunmount ---------
+ans: 
+
+In React (and React Native), **both componentDidMount and componentWillUnmount happen inside `useEffect`**, but the key difference is:
+
+---
+
+# ✅ **How to Identify Which `useEffect` is Mount and Which is Unmount**
+
+### ✔ **Component Did Mount (runs ONCE when component loads)**
+
+A `useEffect` with **empty dependency array `[]`** and **NO return function** → this is **componentDidMount**.
+
+```js
+useEffect(() => {
+  alert("Component Mounted");
+}, []); 
+```
+
+---
+
+### ✔ **Component Will Unmount (runs when component is removed)**
+
+A `useEffect` with **empty dependency array `[]`** and **a cleanup function `return () => {}`** → this is **componentWillUnmount**.
+
+```js
+useEffect(() => {
+  return () => {
+    alert("Component Unmounted");
+  };
+}, []); 
+```
+
+---
+
+# ❗ BUT YOUR CODE HAS A PROBLEM
+
+At the bottom, you exported the wrong thing:
+
+```js
+export default TogglageShowComponentWillUnmount;
+```
+
+But your component name is:
+
+```js
+const Student = () => { ... }
+```
+
+So you should export:
+
+```js
+export default Student;
+```
+
+---
+
+# ✅ FIXED + CLEAN VERSION OF YOUR COMPONENT
+
+```js
+import React, { useEffect } from "react";
+import { View, Text } from "react-native";
+
+const Student = () => {
+
+  // ComponentWillUnmount
+  useEffect(() => {
+    return () => {
+      alert("Student Component is Unmounting now");
+    };
+  }, []);
+
+  // ComponentDidMount
+  useEffect(() => {
+    alert("Student Component is Mounting now");
+  }, []);
+
+  return (
+    <View>
+      <Text style={{ color: "red", fontSize: 30, marginTop: 20 }}>
+        Student Component Loaded
+      </Text>
+    </View>
+  );
+};
+
+export default Student;
+```
+
+---
+
+# ⭐ KEY RULE TO REMEMBER
+
+| Behavior    | How It Works in `useEffect`           | Equivalent Class Lifecycle |
+| ----------- | ------------------------------------- | -------------------------- |
+| **Mount**   | `useEffect(() => {}, [])`             | `componentDidMount()`      |
+| **Unmount** | `useEffect(() => return cleanup, [])` | `componentWillUnmount()`   |
+| **Update**  | `useEffect(() => {}, [dependencies])` | `componentDidUpdate()`     |
+
+---
+
+# If you want, I can also teach you:
+
+✅ How `useEffect` replaces **all** lifecycle methods
+✅ How `useLayoutEffect`, `useMemo`, `useCallback`, etc. work in React Native
+✅ Complete React Native 0–100 Roadmap
+
+Just tell me — **continue or not?**
+
+1) ![alt text](image-6.png)
+2) ![alt text](image-7.png)
+3) ![alt text](image-8.png)
+4) ![alt text](image-9.png)
+
+## ---------- 
