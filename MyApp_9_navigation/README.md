@@ -16,7 +16,11 @@
 
 
 # ------------ React Native tutorial in Hindi #40 Style in Stack Navigation | React Navigation v6 ----
-1) 
+1) ![alt text](image-7.png)
+2) ![alt text](image-8.png)
+
+# --------- React Native tutorial in Hindi #41 Button and component in Stack Navigation | React Navigation v6 ----------
+
 
 
 Below is the **Complete, Beginner-to-Advanced React Native Navigation Guide — Full Notes, Concepts, Examples, Best Practices (2025)**
