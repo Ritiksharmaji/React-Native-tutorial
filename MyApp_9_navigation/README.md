@@ -20,6 +20,190 @@
 2) ![alt text](image-8.png)
 
 # --------- React Native tutorial in Hindi #41 Button and component in Stack Navigation | React Navigation v6 ----------
+1) ![alt text](image-9.png)
+2) 
+
+# ---- React Native tutorial in Hindi #43 Pass data between Screens in Stack Navigation | React Navigation -------
+1) ![alt text](image-10.png)
+2) 
+
+Below is **the complete explanation + corrected code + notes** for **passing static data from one screen to another using Stack Navigation**.
+
+---
+
+# 📌 **How to Pass Static Data Using Stack Navigation**
+
+React Navigation uses **route params** to pass data between screens.
+
+### ✅ **Syntax**
+
+### **Send data**
+
+```js
+props.navigation.navigate("Home", { username: "Ritik", age: 24 })
+```
+
+### **Receive data**
+
+```js
+const { username, age } = props.route.params;
+```
+
+---
+
+# ⭐ **Fixing Your Example With Static Data Passing**
+
+### ✔ Login screen → sending data
+
+### ✔ Home screen → receiving data
+
+### ✔ App.js remains same except one small improvement
+
+---
+
+# ✅ **1. Updated Login.js (sending data)**
+
+```js
+import { Button, Text, View } from "react-native";
+import React from "react";
+
+export const Login = (props) => {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Login Screen</Text>
+
+      <Button
+        title='Go to Home'
+        onPress={() =>
+          props.navigation.navigate("Home", {
+            username: "Ritik Sharma",
+            age: 24,
+            country: "India"
+          })
+        }
+      />
+    </View>
+  );
+};
+```
+
+---
+
+# ✅ **2. Updated Home.js (receiving data)**
+
+```js
+import { Text, View } from "react-native";
+import React from "react";
+
+export const Home = (props) => {
+  const { username, age, country } = props.route.params;
+
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Home Screen</Text>
+      <Text>User: {username}</Text>
+      <Text>Age: {age}</Text>
+      <Text>Country: {country}</Text>
+    </View>
+  );
+};
+```
+
+---
+
+# ✅ **3. App.js (your code is correct; no big changes)**
+
+```js
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Home } from './src/Component/Home';
+import { Login } from './src/Component/Login';
+
+const Stack = createNativeStackNavigator();
+
+const App = () => {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: { backgroundColor: "blue" },
+          headerTintColor: "orange",
+          headerTitleStyle: {
+            fontSize: 25,
+            fontFamily: "Roboto"
+          }
+        }}
+      >
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{
+            title: "User Login",
+            headerLeft: () => <></>,
+            headerRight: () => <></>,
+          }}
+        />
+        <Stack.Screen name="Home" component={Home} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
+
+export default App;
+```
+
+---
+
+# 📘 **Notes: Passing Data Between Screens**
+
+### 1️⃣ **Pass static data**
+
+```js
+navigate("Home", { name: "Ritik" })
+```
+
+### 2️⃣ **Pass dynamic data**
+
+```js
+navigate("Home", { user: userData })
+```
+
+### 3️⃣ **Receive data on another screen**
+
+```js
+const { name } = route.params;
+```
+
+### 4️⃣ **Check if params exist**
+
+```js
+const name = route?.params?.name ?? "Guest";
+```
+
+### 5️⃣ **Sending multiple values**
+
+```js
+navigate("Home", {
+  id: 1,
+  username: "John",
+  isAdmin: true
+})
+```
+
+---
+
+# ⭐ Want more examples?
+
+I can give you:
+
+📌 **Passing data backward using navigation.goBack**
+📌 **Passing functions between screens**
+📌 **Using useNavigation instead of props**
+📌 **Using async storage + navigation**
+
+Just tell me:
+➡ **"Give advanced navigation examples"**
 
 
 
