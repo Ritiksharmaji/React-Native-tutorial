@@ -1,16 +1,19 @@
 import React from 'react';
 import { SafeAreaView, StatusBar } from 'react-native';
 import { Provider } from 'react-redux';
-import { store } from './src/redux/store';
+import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor } from './src/redux/store';
 import TodoScreen from './src/screens/TodoScreen';
 
 const App = () => {
   return (
     <Provider store={store}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <StatusBar barStyle="dark-content" />
-        <TodoScreen />
-      </SafeAreaView>
+      <PersistGate loading={null} persistor={persistor}>
+        <SafeAreaView style={{ flex: 1 }}>
+          <StatusBar barStyle="dark-content" />
+          <TodoScreen />
+        </SafeAreaView>
+      </PersistGate>
     </Provider>
   );
 };
