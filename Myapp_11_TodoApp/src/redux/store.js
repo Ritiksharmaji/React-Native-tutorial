@@ -1,26 +1,15 @@
-// import { configureStore } from '@reduxjs/toolkit';
-// import todoReducer from './todoSlice';
-
-// export const store = configureStore({
-//   reducer: {
-//     todo: todoReducer,
-//   },
-// });
-
 import { configureStore } from '@reduxjs/toolkit';
-import { persistStore, persistReducer } from 'redux-persist';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { persistReducer, persistStore } from 'redux-persist';
 import todoReducer from './todoSlice';
+import { mmkvStorage } from './mmkvStorage';
 
 const persistConfig = {
-  key: 'root',
-  storage: AsyncStorage,
+  key: 'todo',
+  storage: mmkvStorage,
+  whitelist: ['list'],
 };
 
-const persistedReducer = persistReducer(
-  persistConfig,
-  todoReducer
-);
+const persistedReducer = persistReducer(persistConfig, todoReducer);
 
 export const store = configureStore({
   reducer: {

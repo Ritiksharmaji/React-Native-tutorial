@@ -16,6 +16,7 @@
     "react": "19.2.0",
     "react-native": "0.83.0",
     "react-native-mmkv": "^4.1.0",
+    "react-native-nitro-modules": "^0.31.10",
     "react-native-safe-area-context": "^5.5.2",
     "react-redux": "^9.2.0",
     "redux-persist": "^6.0.0"

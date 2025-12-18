@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,52 +8,55 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import TodoItem from '../components/TodoItem';
-import {
-  addTodo,
-  toggleTodo,
-  deleteTodo,
-} from '../redux/todoSlice';
+import { addTodo, toggleTodo, deleteTodo } from '../redux/todoSlice';
 
 const TodoScreen = () => {
-  const [task, setTask] = useState('');
-  const todos = useSelector(state => state.todo.todos);
+  const [text, setText] = useState('');
+  const todos = useSelector(state => state.todo.list);
   const dispatch = useDispatch();
-
-  const handleAddTodo = () => {
-    if (!task.trim()) return;
-    dispatch(addTodo(task));
-    setTask('');
-  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>📝 Todo App (Redux)</Text>
+      <Text style={styles.title}>Todo App (MMKV)</Text>
 
-      <View style={styles.inputContainer}>
+      <View style={styles.inputRow}>
         <TextInput
-          placeholder="Enter task..."
-          value={task}
-          onChangeText={setTask}
           style={styles.input}
+          value={text}
+          onChangeText={setText}
+          placeholder="Enter todo"
         />
         <TouchableOpacity
           style={styles.addBtn}
-          onPress={handleAddTodo}
+          onPress={() => {
+            if (text.trim()) {
+              dispatch(addTodo(text));
+              setText('');
+            }
+          }}
         >
-          <Text style={styles.addText}>Add</Text>
+          <Text style={styles.btnText}>Add</Text>
         </TouchableOpacity>
       </View>
 
       <FlatList
         data={todos}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         renderItem={({ item }) => (
-          <TodoItem
-            item={item}
-            onToggle={(id) => dispatch(toggleTodo(id))}
-            onDelete={(id) => dispatch(deleteTodo(id))}
-          />
+          <View style={styles.todoItem}>
+            <Text
+              style={[
+                styles.todoText,
+                item.completed && styles.completed,
+              ]}
+              onPress={() => dispatch(toggleTodo(item.id))}
+            >
+              {item.text}
+            </Text>
+            <TouchableOpacity onPress={() => dispatch(deleteTodo(item.id))}>
+              <Text style={styles.delete}>❌</Text>
+            </TouchableOpacity>
+          </View>
         )}
       />
     </View>
@@ -64,30 +67,13 @@ export default TodoScreen;
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16 },
-  heading: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    marginBottom: 16,
-  },
-  input: {
-    flex: 1,
-    borderWidth: 1,
-    borderRadius: 6,
-    paddingHorizontal: 12,
-  },
-  addBtn: {
-    backgroundColor: '#4CAF50',
-    marginLeft: 8,
-    paddingHorizontal: 16,
-    justifyContent: 'center',
-    borderRadius: 6,
-  },
-  addText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
+  title: { fontSize: 22, fontWeight: 'bold', marginBottom: 12 },
+  inputRow: { flexDirection: 'row', marginBottom: 16 },
+  input: { flex: 1, borderWidth: 1, padding: 8, borderRadius: 6 },
+  addBtn: { marginLeft: 8, backgroundColor: '#4CAF50', padding: 12, borderRadius: 6 },
+  btnText: { color: '#fff' },
+  todoItem: { flexDirection: 'row', justifyContent: 'space-between', padding: 12 },
+  todoText: { fontSize: 16 },
+  completed: { textDecorationLine: 'line-through', color: 'gray' },
+  delete: { fontSize: 18 },
 });
