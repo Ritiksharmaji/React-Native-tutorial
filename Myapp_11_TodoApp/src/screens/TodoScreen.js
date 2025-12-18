@@ -7,43 +7,28 @@ import {
   FlatList,
   StyleSheet,
 } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import TodoItem from '../components/TodoItem';
+import {
+  addTodo,
+  toggleTodo,
+  deleteTodo,
+} from '../redux/todoSlice';
 
 const TodoScreen = () => {
   const [task, setTask] = useState('');
-  const [todos, setTodos] = useState([]);
+  const todos = useSelector(state => state.todo.todos);
+  const dispatch = useDispatch();
 
-  const addTodo = () => {
+  const handleAddTodo = () => {
     if (!task.trim()) return;
-
-    setTodos([
-      ...todos,
-      {
-        id: Date.now().toString(),
-        title: task,
-        completed: false,
-      },
-    ]);
+    dispatch(addTodo(task));
     setTask('');
-  };
-
-  const toggleTodo = (id) => {
-    setTodos(
-      todos.map(todo =>
-        todo.id === id
-          ? { ...todo, completed: !todo.completed }
-          : todo
-      )
-    );
-  };
-
-  const deleteTodo = (id) => {
-    setTodos(todos.filter(todo => todo.id !== id));
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>📝 Todo App</Text>
+      <Text style={styles.heading}>📝 Todo App (Redux)</Text>
 
       <View style={styles.inputContainer}>
         <TextInput
@@ -52,7 +37,10 @@ const TodoScreen = () => {
           onChangeText={setTask}
           style={styles.input}
         />
-        <TouchableOpacity style={styles.addBtn} onPress={addTodo}>
+        <TouchableOpacity
+          style={styles.addBtn}
+          onPress={handleAddTodo}
+        >
           <Text style={styles.addText}>Add</Text>
         </TouchableOpacity>
       </View>
@@ -63,8 +51,8 @@ const TodoScreen = () => {
         renderItem={({ item }) => (
           <TodoItem
             item={item}
-            onToggle={toggleTodo}
-            onDelete={deleteTodo}
+            onToggle={(id) => dispatch(toggleTodo(id))}
+            onDelete={(id) => dispatch(deleteTodo(id))}
           />
         )}
       />
@@ -75,10 +63,7 @@ const TodoScreen = () => {
 export default TodoScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
+  container: { flex: 1, padding: 16 },
   heading: {
     fontSize: 24,
     fontWeight: 'bold',
