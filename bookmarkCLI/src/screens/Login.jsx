@@ -17,7 +17,7 @@ import styles from "../assets/styles/login.styles";
 import COLORS from "../constants/colors";
 import { useAuthStore } from "../store/authStore";
 
-export default function Login() {
+export default function LoginScreen() {
   const navigation = useNavigation();
 
   const [email, setEmail] = useState("");
@@ -28,6 +28,8 @@ export default function Login() {
 
   const handleLogin = async () => {
     const result = await login(email, password);
+    console.log("login result:", result);
+
     if (!result.success) {
       Alert.alert("Login Failed", result.error);
     }
