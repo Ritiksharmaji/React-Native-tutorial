@@ -1,12 +1,12 @@
 import { View, Text, Image } from "react-native";
-import { useSelector } from "react-redux";
+import { useContext } from "react";
 
 import styles from "../assets/styles/profile.styles";
 import { formatMemberSince } from "../lib/utils";
+import { AuthContext } from "../contexts/AuthContext"; // ✅ context
 
 export default function ProfileHeader() {
-  // Get user from Redux store
-  const user = useSelector((state) => state.auth.user);
+  const { user } = useContext(AuthContext); // ✅ get user from context
 
   if (!user) return null;
 

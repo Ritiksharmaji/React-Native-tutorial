@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import {
   View,
   Text,
@@ -8,34 +8,32 @@ import {
   Image,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { useDispatch, useSelector } from "react-redux";
 
 import styles from "../assets/styles/home.styles";
 import COLORS from "../constants/colors";
-import { fetchBooks } from "../store/booksSlice";
+import { BooksContext } from "../contexts/BooksContext"; // ✅ context
 import { formatPublishDate } from "../lib/utils";
 import Loader from "../components/Loader";
 
 export default function Home() {
-  const dispatch = useDispatch();
-
   const {
     books,
     loading,
     refreshing,
     page,
     hasMore,
-  } = useSelector((state) => state.books);
+    fetchBooks,
+  } = useContext(BooksContext);
 
   // Initial load
   useEffect(() => {
-    dispatch(fetchBooks({ page: 1 }));
+    fetchBooks({ page: 1 });
   }, []);
 
   // Pagination
   const handleLoadMore = () => {
     if (hasMore && !loading && !refreshing) {
-      dispatch(fetchBooks({ page: page + 1 }));
+      fetchBooks({ page: page + 1 });
     }
   };
 
@@ -105,23 +103,21 @@ export default function Home() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContainer}
 
-        // {/* Pull to refresh */}
+        /* Pull to refresh */
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
-            onRefresh={() =>
-              dispatch(fetchBooks({ page: 1, refresh: true }))
-            }
+            onRefresh={() => fetchBooks({ page: 1, refresh: true })}
             colors={[COLORS.primary]}
             tintColor={COLORS.primary}
           />
         }
 
-        // {/* Infinite scroll */}
+        /* Infinite scroll */
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.1}
 
-        // {/* Header */}
+        /* Header */
         ListHeaderComponent={
           <View style={styles.header}>
             <Text style={styles.headerTitle}>BookWorm 🐛</Text>
@@ -131,7 +127,7 @@ export default function Home() {
           </View>
         }
 
-        // {/* Footer loader */}
+        /* Footer loader */
         ListFooterComponent={
           hasMore && books.length > 0 ? (
             <ActivityIndicator
@@ -142,7 +138,7 @@ export default function Home() {
           ) : null
         }
 
-        // {/* Empty state */}
+        /* Empty state */
         ListEmptyComponent={
           !loading && (
             <View style={styles.emptyContainer}>

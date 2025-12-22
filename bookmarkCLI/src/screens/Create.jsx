@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
   View,
   Text,
@@ -14,17 +14,14 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { launchImageLibrary } from "react-native-image-picker";
-import { useDispatch, useSelector } from "react-redux";
 
 import styles from "../assets/styles/create.styles";
 import COLORS from "../constants/colors";
-import { createBook } from "../store/booksSlice";
+import { BooksContext } from "../contexts/BooksContext"; // ✅ context
 
 export default function Create() {
-  const dispatch = useDispatch();
   const navigation = useNavigation();
-
-  const { loading } = useSelector((state) => state.books);
+  const { createBook, loading, error } = useContext(BooksContext); // ✅ from context
 
   const [title, setTitle] = useState("");
   const [caption, setCaption] = useState("");
@@ -62,13 +59,9 @@ export default function Create() {
       return;
     }
 
-    const result = await dispatch(
-      createBook({ title, caption, rating, imageBase64 })
-    );
+    try {
+      await createBook({ title, caption, rating, imageBase64 });
 
-    if (createBook.rejected.match(result)) {
-      Alert.alert("Error", result.payload);
-    } else {
       Alert.alert("Success", "Book recommendation posted!");
       setTitle("");
       setCaption("");
@@ -76,6 +69,8 @@ export default function Create() {
       setImage(null);
       setImageBase64(null);
       navigation.navigate("Home");
+    } catch (err) {
+      Alert.alert("Error", err?.message || error || "Something went wrong");
     }
   };
 

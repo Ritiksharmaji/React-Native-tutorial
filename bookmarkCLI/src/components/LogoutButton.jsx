@@ -1,16 +1,13 @@
 import { View, Text, TouchableOpacity, Alert } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-
-//import { useAuthStore } from "../store/authStore";
-import { useDispatch, useSelector } from "react-redux";
-import { logoutUser } from "../store/authSlice"; // 👈 import thunk
+import { useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext"; // ✅ import context
 
 import styles from "../assets/styles/profile.styles";
 import COLORS from "../constants/colors";
 
 export default function LogoutButton() {
-  //const { logout } = useAuthStore();
-  const dispatch = useDispatch();
+  const { logoutUser } = useContext(AuthContext); // ✅ get logout function from context
 
   const confirmLogout = () => {
     Alert.alert("Logout", "Are you sure you want to logout?", [
@@ -18,8 +15,7 @@ export default function LogoutButton() {
       {
         text: "Logout",
         style: "destructive",
-        // onPress: logout,
-        onPress: () => dispatch(logoutUser()), // ✅ dispatch action
+        onPress: logoutUser, // ✅ call context function directly
       },
     ]);
   };

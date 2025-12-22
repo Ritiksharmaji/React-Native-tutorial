@@ -9,36 +9,23 @@ import {
   Platform,
   Alert,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 
 import styles from "../assets/styles/login.styles";
 import COLORS from "../constants/colors";
-import { useAuthStore } from "../store/authStore";
-import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../store/authSlice"; // ✅ redux thunk
+import { AuthContext } from "../contexts/AuthContext"; // ✅ context
 
 export default function LoginScreen() {
   const navigation = useNavigation();
-  const dispatch = useDispatch();
+
+  const { loginUser, isLoading, isCheckingAuth, error } =
+    useContext(AuthContext); // ✅ from context
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
-  //const { isLoading, login, isCheckingAuth } = useAuthStore();
-  const { isLoading, isCheckingAuth, error } = useSelector(
-    (state) => state.auth
-  );
-
-  // const handleLogin = async () => {
-  //   const result = await login(email, password);
-  //   console.log("login result:", result);
-
-  //   if (!result.success) {
-  //     Alert.alert("Login Failed", result.error);
-  //   }
-  // };
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -46,14 +33,14 @@ export default function LoginScreen() {
       return;
     }
 
-    const result = await dispatch(
-      loginUser({ email, password })
-    );
-
-    if (loginUser.rejected.match(result)) {
-      Alert.alert("Login Failed", result.payload || "Something went wrong");
+    try {
+      await loginUser({ email, password });
+    } catch (err) {
+      Alert.alert(
+        "Login Failed",
+        err?.message || error || "Something went wrong"
+      );
     }
-    
   };
 
   if (isCheckingAuth) return null;

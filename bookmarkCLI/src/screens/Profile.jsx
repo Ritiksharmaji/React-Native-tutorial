@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   View,
   Alert,
@@ -11,33 +11,32 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { useDispatch, useSelector } from "react-redux";
 
 import styles from "../assets/styles/profile.styles";
 import ProfileHeader from "../components/ProfileHeader";
 import LogoutButton from "../components/LogoutButton";
 import COLORS from "../constants/colors";
 import Loader from "../components/Loader";
-import { fetchUserBooks, deleteBook } from "../store/booksSlice";
+import { BooksContext } from "../contexts/BooksContext";
 
 // small delay for smooth refresh UX
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export default function Profile() {
-  const dispatch = useDispatch();
   const navigation = useNavigation();
-
   const {
     userBooks,
     loading,
     deletingId,
-  } = useSelector((state) => state.books);
+    fetchUserBooks,
+    deleteBook,
+  } = useContext(BooksContext);
 
   const [refreshing, setRefreshing] = useState(false);
 
   // Initial fetch
   useEffect(() => {
-    dispatch(fetchUserBooks());
+    fetchUserBooks();
   }, []);
 
   // Confirm delete alert
@@ -50,7 +49,7 @@ export default function Profile() {
         {
           text: "Delete",
           style: "destructive",
-          onPress: () => dispatch(deleteBook(bookId)),
+          onPress: () => deleteBook(bookId),
         },
       ]
     );
@@ -60,7 +59,7 @@ export default function Profile() {
   const handleRefresh = async () => {
     setRefreshing(true);
     await sleep(400);
-    dispatch(fetchUserBooks());
+    await fetchUserBooks();
     setRefreshing(false);
   };
 
