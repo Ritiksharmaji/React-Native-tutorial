@@ -1,81 +1,47 @@
+import { useEffect } from "react";
 import {
   View,
   Text,
-  TouchableOpacity,
   FlatList,
   ActivityIndicator,
   RefreshControl,
   Image,
 } from "react-native";
-import { useEffect, useState } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { useDispatch, useSelector } from "react-redux";
 
-import { useAuthStore } from "../store/authStore";
 import styles from "../assets/styles/home.styles";
-import { API_URL } from "../constants/api";
-import { formatPublishDate } from "../lib/utils";
 import COLORS from "../constants/colors";
+import { fetchBooks } from "../store/booksSlice";
+import { formatPublishDate } from "../lib/utils";
 import Loader from "../components/Loader";
 
-export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
 export default function Home() {
-  const { token } = useAuthStore();
-  const [books, setBooks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
+  const dispatch = useDispatch();
 
-  const fetchBooks = async (pageNum = 1, refresh = false) => {
-    try {
-      if (refresh) setRefreshing(true);
-      else if (pageNum === 1) setLoading(true);
+  const {
+    books,
+    loading,
+    refreshing,
+    page,
+    hasMore,
+  } = useSelector((state) => state.books);
 
-      const response = await fetch(`${API_URL}/books?page=${pageNum}&limit=2`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Failed to fetch books");
-
-      const combinedBooks =
-        refresh || pageNum === 1
-          ? data.books
-          : [...books, ...data.books].filter(
-              (book, index, self) =>
-                index === self.findIndex((b) => b._id === book._id)
-            );
-
-      setBooks(combinedBooks);
-      setHasMore(pageNum < data.totalPages);
-      setPage(pageNum);
-    } catch (error) {
-      console.log("Error fetching books:", error);
-    } finally {
-      if (refresh) {
-        await sleep(800);
-        setRefreshing(false);
-      } else {
-        setLoading(false);
-      }
-    }
-  };
-
+  // Initial load
   useEffect(() => {
-    fetchBooks();
+    dispatch(fetchBooks({ page: 1 }));
   }, []);
 
+  // Pagination
   const handleLoadMore = () => {
     if (hasMore && !loading && !refreshing) {
-      fetchBooks(page + 1);
+      dispatch(fetchBooks({ page: page + 1 }));
     }
   };
 
-  const renderRatingStars = (rating) => {
-    return Array.from({ length: 5 }, (_, i) => (
+  // Rating stars
+  const renderRatingStars = (rating) =>
+    Array.from({ length: 5 }, (_, i) => (
       <Ionicons
         key={i}
         name={i + 1 <= rating ? "star" : "star-outline"}
@@ -84,10 +50,11 @@ export default function Home() {
         style={{ marginRight: 2 }}
       />
     ));
-  };
 
+  // Single book card
   const renderItem = ({ item }) => (
     <View style={styles.bookCard}>
+      {/* USER HEADER */}
       <View style={styles.bookHeader}>
         <View style={styles.userInfo}>
           <Image
@@ -98,6 +65,7 @@ export default function Home() {
         </View>
       </View>
 
+      {/* BOOK IMAGE */}
       <View style={styles.bookImageContainer}>
         <Image
           source={{ uri: item.image }}
@@ -106,12 +74,16 @@ export default function Home() {
         />
       </View>
 
+      {/* DETAILS */}
       <View style={styles.bookDetails}>
         <Text style={styles.bookTitle}>{item.title}</Text>
+
         <View style={styles.ratingContainer}>
           {renderRatingStars(item.rating)}
         </View>
+
         <Text style={styles.caption}>{item.caption}</Text>
+
         <Text style={styles.date}>
           Shared on {formatPublishDate(item.createdAt)}
         </Text>
@@ -119,34 +91,47 @@ export default function Home() {
     </View>
   );
 
-  if (loading) return <Loader />;
+  // First load
+  if (loading && books.length === 0) {
+    return <Loader />;
+  }
 
   return (
     <View style={styles.container}>
       <FlatList
         data={books}
-        renderItem={renderItem}
         keyExtractor={(item) => item._id}
+        renderItem={renderItem}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContainer}
+
+        // {/* Pull to refresh */}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
-            onRefresh={() => fetchBooks(1, true)}
+            onRefresh={() =>
+              dispatch(fetchBooks({ page: 1, refresh: true }))
+            }
             colors={[COLORS.primary]}
             tintColor={COLORS.primary}
           />
         }
+
+        // {/* Infinite scroll */}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.1}
+
+        // {/* Header */}
         ListHeaderComponent={
           <View style={styles.header}>
             <Text style={styles.headerTitle}>BookWorm 🐛</Text>
             <Text style={styles.headerSubtitle}>
-              Discover great reads from the community👇
+              Discover great reads from the community 👇
             </Text>
           </View>
         }
+
+        // {/* Footer loader */}
         ListFooterComponent={
           hasMore && books.length > 0 ? (
             <ActivityIndicator
@@ -156,18 +141,22 @@ export default function Home() {
             />
           ) : null
         }
+
+        // {/* Empty state */}
         ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <Ionicons
-              name="book-outline"
-              size={60}
-              color={COLORS.textSecondary}
-            />
-            <Text style={styles.emptyText}>No recommendations yet</Text>
-            <Text style={styles.emptySubtext}>
-              Be the first to share a book!
-            </Text>
-          </View>
+          !loading && (
+            <View style={styles.emptyContainer}>
+              <Ionicons
+                name="book-outline"
+                size={60}
+                color={COLORS.textSecondary}
+              />
+              <Text style={styles.emptyText}>No recommendations yet</Text>
+              <Text style={styles.emptySubtext}>
+                Be the first to share a book!
+              </Text>
+            </View>
+          )
         }
       />
     </View>

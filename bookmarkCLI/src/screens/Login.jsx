@@ -16,23 +16,44 @@ import { useNavigation } from "@react-navigation/native";
 import styles from "../assets/styles/login.styles";
 import COLORS from "../constants/colors";
 import { useAuthStore } from "../store/authStore";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../store/authSlice"; // ✅ redux thunk
 
 export default function LoginScreen() {
   const navigation = useNavigation();
-
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const { isLoading, login, isCheckingAuth } = useAuthStore();
+  //const { isLoading, login, isCheckingAuth } = useAuthStore();
+  const { isLoading, isCheckingAuth, error } = useSelector(
+    (state) => state.auth
+  );
+
+  // const handleLogin = async () => {
+  //   const result = await login(email, password);
+  //   console.log("login result:", result);
+
+  //   if (!result.success) {
+  //     Alert.alert("Login Failed", result.error);
+  //   }
+  // };
 
   const handleLogin = async () => {
-    const result = await login(email, password);
-    console.log("login result:", result);
-
-    if (!result.success) {
-      Alert.alert("Login Failed", result.error);
+    if (!email || !password) {
+      Alert.alert("Error", "Please enter email and password");
+      return;
     }
+
+    const result = await dispatch(
+      loginUser({ email, password })
+    );
+
+    if (loginUser.rejected.match(result)) {
+      Alert.alert("Login Failed", result.payload || "Something went wrong");
+    }
+    
   };
 
   if (isCheckingAuth) return null;

@@ -1,24 +1,38 @@
 import { View, Text, Image } from "react-native";
-import { useAuthStore } from "../store/authStore";
+import { useSelector } from "react-redux";
+
 import styles from "../assets/styles/profile.styles";
 import { formatMemberSince } from "../lib/utils";
 
 export default function ProfileHeader() {
-  const { user } = useAuthStore();
+  // Get user from Redux store
+  const user = useSelector((state) => state.auth.user);
 
   if (!user) return null;
 
   return (
     <View style={styles.profileHeader}>
+      {/* Profile Image */}
       <Image
-        source={{ uri: user.profileImage }}
+        source={{
+          uri:
+            user.profileImage ||
+            "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+        }}
         style={styles.profileImage}
         resizeMode="cover"
       />
 
+      {/* User Info */}
       <View style={styles.profileInfo}>
-        <Text style={styles.username}>{user.username}</Text>
-        <Text style={styles.email}>{user.email}</Text>
+        <Text style={styles.username}>
+          {user.username || "User"}
+        </Text>
+
+        <Text style={styles.email}>
+          {user.email || "No email"}
+        </Text>
+
         <Text style={styles.memberSince}>
           🗓️ Joined {formatMemberSince(user.createdAt)}
         </Text>

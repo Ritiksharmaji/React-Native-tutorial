@@ -14,24 +14,26 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { launchImageLibrary } from "react-native-image-picker";
+import { useDispatch, useSelector } from "react-redux";
 
 import styles from "../assets/styles/create.styles";
 import COLORS from "../constants/colors";
-import { useAuthStore } from "../store/authStore";
-import { API_URL } from "../constants/api";
+import { createBook } from "../store/booksSlice";
 
 export default function Create() {
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+
+  const { loading } = useSelector((state) => state.books);
+
   const [title, setTitle] = useState("");
   const [caption, setCaption] = useState("");
   const [rating, setRating] = useState(3);
   const [image, setImage] = useState(null);
   const [imageBase64, setImageBase64] = useState(null);
-  const [loading, setLoading] = useState(false);
 
-  const navigation = useNavigation();
-  const { token } = useAuthStore();
-
-  const pickImage = async () => {
+  /* ================= PICK IMAGE ================= */
+  const pickImage = () => {
     launchImageLibrary(
       {
         mediaType: "photo",
@@ -42,7 +44,7 @@ export default function Create() {
         if (response.didCancel) return;
 
         if (response.errorCode) {
-          Alert.alert("Error", response.errorMessage || "Image picker error");
+          Alert.alert("Error", response.errorMessage);
           return;
         }
 
@@ -53,34 +55,20 @@ export default function Create() {
     );
   };
 
+  /* ================= SUBMIT ================= */
   const handleSubmit = async () => {
-    if (!title || !caption || !imageBase64 || !rating) {
-      Alert.alert("Error", "Please fill in all fields");
+    if (!title || !caption || !imageBase64) {
+      Alert.alert("Error", "Please fill all fields");
       return;
     }
 
-    try {
-      setLoading(true);
+    const result = await dispatch(
+      createBook({ title, caption, rating, imageBase64 })
+    );
 
-      const imageDataUrl = `data:image/jpeg;base64,${imageBase64}`;
-
-      const response = await fetch(`${API_URL}/books`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title,
-          caption,
-          rating: rating.toString(),
-          image: imageDataUrl,
-        }),
-      });
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message);
-
+    if (createBook.rejected.match(result)) {
+      Alert.alert("Error", result.payload);
+    } else {
       Alert.alert("Success", "Book recommendation posted!");
       setTitle("");
       setCaption("");
@@ -88,28 +76,23 @@ export default function Create() {
       setImage(null);
       setImageBase64(null);
       navigation.navigate("Home");
-    } catch (error) {
-      Alert.alert("Error", error.message || "Something went wrong");
-    } finally {
-      setLoading(false);
     }
   };
 
-  const renderRatingPicker = () => {
-    return (
-      <View style={styles.ratingContainer}>
-        {[1, 2, 3, 4, 5].map((i) => (
-          <TouchableOpacity key={i} onPress={() => setRating(i)}>
-            <Ionicons
-              name={i <= rating ? "star" : "star-outline"}
-              size={32}
-              color={i <= rating ? "#f4b400" : COLORS.textSecondary}
-            />
-          </TouchableOpacity>
-        ))}
-      </View>
-    );
-  };
+  /* ================= RATING ================= */
+  const renderRatingPicker = () => (
+    <View style={styles.ratingContainer}>
+      {[1, 2, 3, 4, 5].map((i) => (
+        <TouchableOpacity key={i} onPress={() => setRating(i)}>
+          <Ionicons
+            name={i <= rating ? "star" : "star-outline"}
+            size={32}
+            color={i <= rating ? "#f4b400" : COLORS.textSecondary}
+          />
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
 
   return (
     <KeyboardAvoidingView
@@ -120,41 +103,30 @@ export default function Create() {
         <View style={styles.card}>
           <Text style={styles.title}>Add Book Recommendation</Text>
 
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>Book Title</Text>
-            <TextInput
-              style={styles.input}
-              value={title}
-              onChangeText={setTitle}
-              placeholder="Enter book title"
-            />
-          </View>
+          <TextInput
+            style={styles.input}
+            placeholder="Book Title"
+            value={title}
+            onChangeText={setTitle}
+          />
 
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>Your Rating</Text>
-            {renderRatingPicker()}
-          </View>
+          {renderRatingPicker()}
 
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>Book Image</Text>
-            <TouchableOpacity onPress={pickImage}>
-              {image ? (
-                <Image source={{ uri: image }} style={styles.previewImage} />
-              ) : (
-                <Ionicons name="image-outline" size={40} />
-              )}
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity onPress={pickImage}>
+            {image ? (
+              <Image source={{ uri: image }} style={styles.previewImage} />
+            ) : (
+              <Ionicons name="image-outline" size={40} />
+            )}
+          </TouchableOpacity>
 
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>Caption</Text>
-            <TextInput
-              style={styles.textArea}
-              value={caption}
-              onChangeText={setCaption}
-              multiline
-            />
-          </View>
+          <TextInput
+            style={styles.textArea}
+            placeholder="Caption"
+            value={caption}
+            onChangeText={setCaption}
+            multiline
+          />
 
           <TouchableOpacity
             style={styles.button}

@@ -15,16 +15,36 @@ import { useNavigation } from "@react-navigation/native";
 import styles from "../assets/styles/signup.styles";
 import COLORS from "../constants/colors";
 import { useAuthStore } from "../store/authStore";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser } from "../store/authSlice"; // ✅ redux thunk
 
 export default function Signup() {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const { isLoading, register } = useAuthStore();
+  //const { isLoading, register } = useAuthStore();
+  const { isLoading } = useSelector((state) => state.auth);
+
+  // const handleSignUp = async () => {
+  //   if (!username || !email || !password) {
+  //     Alert.alert("Validation Error", "All fields are required");
+  //     return;
+  //   }
+
+  //   const result = await register(username, email, password);
+
+  //   if (!result.success) {
+  //     Alert.alert("Signup Failed", result.error);
+  //   } else {
+  //     Alert.alert("Success", "Account created successfully");
+  //     navigation.goBack(); // go to Login
+  //   }
+  // };
 
   const handleSignUp = async () => {
     if (!username || !email || !password) {
@@ -32,13 +52,15 @@ export default function Signup() {
       return;
     }
 
-    const result = await register(username, email, password);
+    const result = await dispatch(
+      registerUser({ username, email, password })
+    );
 
-    if (!result.success) {
-      Alert.alert("Signup Failed", result.error);
+    if (registerUser.rejected.match(result)) {
+      Alert.alert("Signup Failed", result.payload || "Something went wrong");
     } else {
       Alert.alert("Success", "Account created successfully");
-      navigation.goBack(); // go to Login
+      navigation.goBack(); // Login screen
     }
   };
 

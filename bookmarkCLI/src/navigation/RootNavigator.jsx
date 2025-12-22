@@ -1,24 +1,29 @@
+import React, { useEffect } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useAuthStore } from "../store/authStore";
+import { useDispatch, useSelector } from "react-redux";
+
 import AuthNavigator from "./AuthNavigator";
 import TabNavigator from "./TabNavigator";
-import React, { useEffect } from "react";
+import { checkAuth } from "../store/authSlice";
 
 const Stack = createNativeStackNavigator();
 
 export default function RootNavigator() {
-  //const { user, token } = useAuthStore();
-const { user, token, isCheckingAuth, checkAuth } = useAuthStore();
-  // Run checkAuth once on mount
+  const dispatch = useDispatch();
+
+  const { user, token, isCheckingAuth } = useSelector(
+    (state) => state.auth
+  );
+
+  // Run auth check once on app load
   useEffect(() => {
-    checkAuth();
+    dispatch(checkAuth());
   }, []);
 
+  // Splash / loading screen while reading AsyncStorage
   if (isCheckingAuth) {
-    // You can return a loading screen while checking AsyncStorage
-    return null; // or a <SplashScreen /> component
+    return null; // or <SplashScreen />
   }
-
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
